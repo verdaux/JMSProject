@@ -16,12 +16,13 @@ public class FirstQueue
 	public static void main(String[] args)
 	{
 		InitialContext initialContext = null;
+		Connection connection = null;
 		
 		try
 		{
 			initialContext = new InitialContext();
 			ConnectionFactory cf= (ConnectionFactory) initialContext.lookup("ConnectionFactory");
-			Connection connection = cf.createConnection();
+			connection = cf.createConnection();
 			Session session = connection.createSession();
 			
 			Queue queue = (Queue) initialContext.lookup("queue/myQueue");
@@ -44,6 +45,28 @@ public class FirstQueue
 		} catch (JMSException e)
 		{
 			e.printStackTrace();
+		}
+		finally {
+			if(initialContext!=null)
+			{
+				try
+				{
+					initialContext.close();
+				} catch (Exception e)
+				{
+					e.printStackTrace();
+				}
+			}
+			if(connection != null)
+			{
+				try
+				{
+					connection.close();
+				} catch (Exception e2)
+				{
+					e2.printStackTrace();
+				}
+			}
 		}
 	}
 
